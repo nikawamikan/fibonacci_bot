@@ -2,11 +2,8 @@ import discord
 import joblib
 import fibomap
 import todo
+import personal
 
-
-TOKEN = "ODkzNDUwNzUxODk5MjIyMDQ2.YVbo2g.HMywC8wQ70lCBBD5xwyLD9eDNmQ"
-chat2_channel_id = 892408912853205105
-bot_channel_id = 899672115727441920
 
 map_file = "map.txt"
 map_list = joblib.load(map_file)
@@ -33,7 +30,7 @@ async def on_message(message):
     if message.author.bot:
         return
 
-    if (message.channel.id != chat2_channel_id) & (message.channel.id != bot_channel_id):
+    if (message.channel.id != personal.CHAT2_CHANNEL_ID) & (message.channel.id != personal.BOT_CHANNEL_ID):
         return
 
     command = message.content.split()
@@ -100,4 +97,4 @@ https: // knowingnormalexecutables.cinnamon2073new.repl.co /\n\
         await fibomap.get_map(message, command, map_list, map_file)
 
 
-client.run(TOKEN)
+client.run(personal.TOKEN)
