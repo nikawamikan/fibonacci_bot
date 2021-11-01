@@ -1,9 +1,9 @@
 import discord
 import joblib
 
-TOKEN = "ODkzNDUwNzUxODk5MjIyMDQ2.YVbo2g.HMywC8wQ70lCBBD5xwyLD9eDNmQ"
-chat2_channel_id = 892408912853205105
-bot_channel_id = 899672115727441920
+TOKEN = "TOKEN"
+chat2_channel_id = 000
+bot_channel_id = 00
 
 map_file = "map.txt"
 map_list = joblib.load(map_file)
