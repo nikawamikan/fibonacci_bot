@@ -2,20 +2,28 @@ import discord
 import joblib
 import fibomap
 import todo
-import personal
+import yaml
+import bump
 
+with open('botconfig.yml') as file:
+    conf = yaml.safe_load(file)
+    print(conf['help']['cin']['targetwd'])
 
-map_file = "map.txt"
-map_list = joblib.load(map_file)
+mapob = conf['map']
+map_list = joblib.load(mapob['file'])
 
-todo_file = "todo.txt"
-Todo_list = joblib.load(todo_file)
+todoob = conf['todo']
+Todo_list = joblib.load(todoob['file'])
 
 client = discord.Client()
 
 
 @client.event
 async def on_message(message):
+
+    await bump.bump(message=message)
+    await bump.dissoku(message=message)
+
     # ----------------------その他コマンド---------------------------#
     if ("すみません" in message.content) or ("ごめん" in message.content):
         file_img = discord.File("image/sorry.gif")
@@ -27,74 +35,40 @@ async def on_message(message):
     if("ふぃぼなっち" in message.content):
         file_img = discord.File("image/fibonacci.png")
         await message.channel.send(file=file_img)
+
     if message.author.bot:
         return
 
-    if (message.channel.id != personal.CHAT2_CHANNEL_ID) & (message.channel.id != personal.BOT_CHANNEL_ID):
+    if (message.channel.id != conf['channel_id']['fibo_chat']) & (message.channel.id != conf['channel_id']['bot']):
         return
 
     command = message.content.split()
 
     if "/test" in message.content:
         await message.channel.send(":gg::+1:")
-
-    if("/help" in message.content) or ("・へlp" in message.content):
+# ------------------------help-------------------------------#
+    if(conf['help']['help']['targetwd'] in message.content) or (conf['help']['help']['targetwd2'] in message.content):
         helpEmbed = discord.Embed(
-            title="＜コマンド一覧＞",
-            color=0x00ff00,
-            description="/todo help : TODOリスト機能の詳細はこちら！\n\
-\n\
-/map help : MAP機能の詳細はこちら！\n\
-\n\
-/cinnamon help : しなもんbotの詳細はこちら!\n\
-\n\
-他にも隠しコマンドがあるよ！")
+            title=conf['help']['help']['title'],
+            color=conf['help']['help']['color'],
+            description=conf['help']['help']['description'])
         await message.channel.send(embed=helpEmbed)
 
-    if(("/cinnamon" in message.content) or ("・cいんあもん" in message.content)) &\
-            (("help" in message.content) or ("へlp" in message.content)):
+    if(conf['help']['cin']['targetwd'] in message.content):
         helpEmbed = discord.Embed(
-            title="＜しなもんbotの使い方！！＞",
-            color=0x00ff00,
-            description="!nether 〈x座標〉〈y座標〉\n\
-オーバーワールドの座標をネザー座標に変換してくれます。\n\
-\n\
-!world〈x座標〉〈y座標〉\n\
-ネザーの座標をオーバーワールド座標に変換してくれます。\n\
-\n\
-!gotobed\n\
-眠い時に...\n\
-\n\
-!cin\n\
-???????\n\
-\n\
-!dynmap\n\
-拠点回りのmap画像を出してくれます。\n\
-更新は手動で気まぐれです。\n\
-\n\
-!bigdynmap\n\
-拠点回りのmap画像を広範囲で出してくれます\n\
-周りのバイオームを確認したいときなどにおすすめです。\n\
-更新は手動で気まぐれです。\n\
-\n\
-!vdynmap\n\
-拠点を斜めから見ることができます\n\
-\n\
-しなもんbotが稼働しているかどうかは\n\
-https: // knowingnormalexecutables.cinnamon2073new.repl.co /\n\
-で確認できます！！\n\
-（しなもんbotは今日も元気に稼働中です！！）と出れば稼働中です\n\
-ほかの場合は稼働してません。")
+            title=conf['help']['cin']['title'],
+            color=conf['help']['cin']['color'],
+            description=conf['help']['help']['description'])
         await message.channel.send(embed=helpEmbed)
 
 # -----------------------Todoリスト----------------------------#
     if("/todo" in message.content) or ("・とど" in message.content):
-        await todo.get_todo(message, command, Todo_list, todo_file)
+        await todo.get_todo(message, command, Todo_list, map)
 
 # -----------------------map----------------------------#
 
     if("/map" in message.content) or ("・まp" in message.content):
-        await fibomap.get_map(message, command, map_list, map_file)
+        await fibomap.get_map(message, command, map_list, todoob)
 
 
-client.run(personal.TOKEN)
+client.run(conf['token'])
