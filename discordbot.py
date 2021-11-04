@@ -58,7 +58,7 @@ async def on_message(message):
         helpEmbed = discord.Embed(
             title=conf['help']['cin']['title'],
             color=conf['help']['cin']['color'],
-            description=conf['help']['help']['description'])
+            description=conf['help']['cin']['description'])
         await message.channel.send(embed=helpEmbed)
 
 # -----------------------Todoリスト----------------------------#
