@@ -27,7 +27,7 @@ Todo_list = joblib.load(todoob['file'])
 channelid = conf['channel_id']
 
 # botの隠し機能的なヤツ
-bot_response = conf['bot_response']
+botcom = conf['bot_response']
 
 pepper = conf['pepper']
 
@@ -36,35 +36,35 @@ client = discord.Client()
 # Help用のembed関数 先頭文字列から targetwd を正規表現で検索します
 
 
-def help_embed_sender(message, obj: map):
+async def help_embed_sender(message, obj: map):
     if(re.match(obj['targetwd'], message.content) != None):
         helpEmbed = discord.Embed(
             title=obj['title'],
             color=obj['color'],
             description=obj['description'])
-        message.channel.send(embed=helpEmbed)
+        await message.channel.send(embed=helpEmbed)
 
 # BOTがなんか読み取ってresponseします
 
 
-def bot_response(message, obj: map):
+async def bot_response(message, obj: map):
     if(re.search(obj['targetwd'], message.content) != None):
         file_img = discord.File(obj['img'])
-        message.channel.send(file=file_img)
+        await message.channel.send(file=file_img)
 
 
 @client.event
 async def on_message(message):
 
     #  ----------------------隠しコマンド---------------------------#
-    bot_response(message=message, obj=bot_response['yagarekudasai'])
-    bot_response(message=message, obj=bot_response['gomennasorry'])
-    bot_response(message=message, obj=bot_response['fibo'])
+    await bot_response(message=message, obj=botcom['yagarekudasai'])
+    await bot_response(message=message, obj=botcom['gomennasorry'])
+    await bot_response(message=message, obj=botcom['fibo'])
 
 # bumpとかdissokuとか検知する子
     if message.author.bot:
-        bump.bot_observer(message=message, pepper=pepper['disboard'])
-        bump.bot_observer(message=message, pepper=pepper['dissoku'])
+        await bump.bot_observer(message=message, pepper=pepper['disboard'])
+        await bump.bot_observer(message=message, pepper=pepper['dissoku'])
 
         return
 
@@ -78,8 +78,8 @@ async def on_message(message):
 
 # ------------------------help-------------------------------#
 
-    help_embed_sender(message, obj=helpob['cin'])
-    help_embed_sender(message, obj=helpob['help'])
+    await help_embed_sender(message, obj=helpob['cin'])
+    await help_embed_sender(message, obj=helpob['help'])
 
 # -----------------------Todoリスト----------------------------#
 
