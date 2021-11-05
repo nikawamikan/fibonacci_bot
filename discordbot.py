@@ -36,7 +36,7 @@ client = discord.Client()
 # Help用のembed関数 先頭文字列から targetwd を正規表現で検索します
 
 
-async def help_embed_sender(message, obj: map):
+async def help_embed_sender(message, obj):
     if(re.match(obj['targetwd'], message.content) != None):
         helpEmbed = discord.Embed(
             title=obj['title'],
@@ -47,7 +47,7 @@ async def help_embed_sender(message, obj: map):
 # BOTがなんか読み取ってresponseします
 
 
-async def bot_response(message, obj: map):
+async def bot_response(message, obj):
     if(re.search(obj['targetwd'], message.content) != None):
         file_img = discord.File(obj['img'])
         await message.channel.send(file=file_img)
