@@ -21,7 +21,6 @@ map_list = joblib.load(mapob['file'])
 
 # todoオブジェクト
 todoob = conf['todo']
-Todo_list = joblib.load(todoob['file'])
 
 # channelidオブジェクト
 channelid = conf['channel_id']
@@ -33,16 +32,26 @@ pepper = conf['pepper']
 
 client = discord.Client()
 
+# 正規表現のプリコンパイル
+todopt = re.compile(todoob['targetwd'])
+
+# if文でメッセージ内から条件ワードが含まれているかを検出したあと
+# help_embed_senderを呼び出します
+
+
+async def if_help_embed_sender(message, obj):
+    if(re.match(obj['targetwd'], message.content) != None):
+        help_embed_sender(message=message, obj=obj)
+
 # Help用のembed関数 先頭文字列から targetwd を正規表現で検索します
 
 
 async def help_embed_sender(message, obj):
-    if(re.match(obj['targetwd'], message.content) != None):
-        helpEmbed = discord.Embed(
-            title=obj['title'],
-            color=obj['color'],
-            description=obj['description'])
-        await message.channel.send(embed=helpEmbed)
+    helpEmbed = discord.Embed(
+        title=obj['title'],
+        color=obj['color'],
+        description=obj['description'])
+    await message.channel.send(embed=helpEmbed)
 
 # BOTがなんか読み取ってresponseします
 
@@ -62,34 +71,34 @@ async def on_message(message):
     await bot_response(message=message, obj=botcom['fibo'])
 
 # bumpとかdissokuとか検知する子
-    if message.author.bot:
-        await bump.bot_observer(message=message, pepper=pepper['disboard'])
-        await bump.bot_observer(message=message, pepper=pepper['dissoku'])
+    await bump.bot_observer(message=message, pepper=pepper['disboard'])
+    await bump.bot_observer(message=message, pepper=pepper['dissoku'])
 
+# 通常のコマンド判定の為botかどうかなどを判定
+    if message.author.bot or (message.channel.id != channelid['fibo_chat']) & (message.channel.id != channelid['bot']):
         return
-
-    if (message.channel.id != channelid['fibo_chat']) & (message.channel.id != channelid['bot']):
-        return
-
-    command = message.content.split()
 
     if "/test" in message.content:
         await message.channel.send(":gg::+1:")
 
 # ------------------------help-------------------------------#
 
-    await help_embed_sender(message, obj=helpob['cin'])
-    await help_embed_sender(message, obj=helpob['help'])
+    await if_help_embed_sender(message, obj=helpob['cin'])
+    await if_help_embed_sender(message, obj=helpob['help'])
 
+# コマンドオブジェクトの定義
+    command = message.content.split()
 # -----------------------Todoリスト----------------------------#
 
-    if("/todo" in message.content) or ("・とど" in message.content):
-        await todo.get_todo(message, command, Todo_list, map)
+    if(todopt.match(message.content) != None):
+        await todo.get_todo(message, command)
+        return
 
 # -----------------------map----------------------------#
 
     if("/map" in message.content) or ("・まp" in message.content):
         await fibomap.get_map(message, command, map_list, todoob)
+        return
 
 
 client.run(conf['token'])
