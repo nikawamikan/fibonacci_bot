@@ -1,10 +1,10 @@
 import re
 import discord
-from discord.message import Attachment
 import joblib
-from discordbot import bot_response
-from discordbot import help_embed_sender
-from discordbot import todoob
+from botsender import bot_mesimg_response
+from botsender import help_embed_sender
+from config import todoob
+
 Todo_list = joblib.load(todoob['file'])
 
 # コマンドごとのオブジェクトを設定
@@ -18,9 +18,10 @@ response_embed = todoob['response_embed']
 
 # 正規表現のパフォーマンス向上のため先にコンパイル
 addpt = re.compile(add['targetwd'])
-donept = re.compile(done['tagertwd'])
+donept = re.compile(done['targetwd'])
 dopt = re.compile(do['targetwd'])
 cancelpt = re.compile(do['cancel']['targetwd'])
+helppt = re.compile(helpob['targetwd'])
 
 # ToDoリストをDiscordに表示するための関数
 
@@ -69,7 +70,7 @@ async def get_todo(message: discord, command):
 
             else:
                 # 値がなかった場合 は例外的に処理
-                bot_response(message, excep['syntax'])
+                await bot_mesimg_response(message=message, obj=excep['syntax'])
 
         # done 完了だった場合の処理
         elif(donept.fullmatch(command[1]) != None):
@@ -83,7 +84,7 @@ async def get_todo(message: discord, command):
 
             # 弾かれたらメッセージ出しとく
             else:
-                bot_response(message, excep['syntax'])
+                await bot_mesimg_response(message=message, obj=excep['syntax'])
         # do やります系の処理
         elif(dopt.fullmatch(command[1]) != None):
 
@@ -104,22 +105,22 @@ async def get_todo(message: discord, command):
 
             # 弾かれたらメッセージ出しとく
             else:
-                bot_response(message, excep['syntax'])
+                await bot_mesimg_response(message, obj=excep['syntax'])
 
         # Helpコマンドの場合の処理
-        elif(re.fullmatch(help['targetwd'], message.content) != None):
+        elif(helppt.fullmatch(command[1]) != None):
             help_embed_sender(message=message, obj=helpob)
             return
 
         # どの条件にも当てはまらない場合の処理
         else:
-            await bot_response(message=message, obj=excep['nonecom'])
+            await bot_mesimg_response(message=message, obj=excep['nonecom'])
 
     # 例外発生時のメッセージ
     except ValueError:
-        await bot_response(message=message, obj=excep['indexout'])
+        await bot_mesimg_response(message=message, obj=excep['indexout'])
     except IndexError:
-        await bot_response(message=message, obj=excep['nonelist'])
+        await bot_mesimg_response(message=message, obj=excep['nonelist'])
 
     # 必ずTodoを送るので最後に記述する
     await send_todo(message=message, Todo_list=Todo_list)
