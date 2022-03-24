@@ -1,1 +1,2 @@
-botconfig.yml
+.env
+__pycache__

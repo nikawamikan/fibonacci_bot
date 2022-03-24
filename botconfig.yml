@@ -1,0 +1,160 @@
+# BOT用のコメントなどを定義するyamlです
+
+# チャンネルIDを定義します。
+channel_id:
+  fibo_chat: 892408912853205105
+  bot: 899672115727441920
+
+# 隠しコマンド系のアレ
+bot_response:
+  yagarekudasai:
+    targetwd: やがれください
+    img: image/simple_yagare.gif
+  gomennasorry:
+    targetwd: すみません|ごめん
+    img: image/sorry.gif
+  fibo:
+    targetwd: ふぃぼなっち
+    img: image/fibonacci.png
+
+# help系の設定です
+help:
+  # しなもんBOT系のHELPの設定
+  cin:
+    targetwd: /cin help
+    title: <しなもんbotの使い方！！>
+    color: 0x00ff00
+    description: |-
+      \!nether 〈x座標〉〈y座標〉
+      オーバーワールドの座標をネザー座標に変換してくれます。
+
+      \!world〈x座標〉〈y座標〉
+      ネザーの座標をオーバーワールド座標に変換してくれます。
+
+      \!gotobed
+      眠い時に...
+
+      \!cin
+      \???????
+
+      \!dynmap
+      拠点回りのmap画像を出してくれます。
+      更新は手動で気まぐれです。
+
+      \!bigdynmap
+      拠点回りのmap画像を広範囲で出してくれます
+      周りのバイオームを確認したいときなどにおすすめです。
+      更新は手動で気まぐれです。
+
+      \!vdynmap
+      拠点を斜めから見ることができます
+
+      \!bigvdynmap
+      拠点を広範囲で斜めから見ることができます
+
+      しなもんbotが稼働しているかどうかは
+      https://knowingnormalexecutables.cinnamon2073new.repl.co /
+      で確認できます！！
+      （しなもんbotは今日も元気に稼働中です！！）と出れば稼働中です
+      ほかの場合は稼働してません。
+  # ふぃぼなっち系BOT系のHELPのコモンの部分
+  help:
+    targetwd: /help|・へｌｐ
+    targetwd2:
+    title: <コマンドー 一覧>
+    color: 0x00ff00
+    description: |-
+      /todo help : TODOリスト機能の詳細はこちら！
+
+      /map help  : MAP機能の詳細はこちら！
+
+      /cin help  : しなもんbotの詳細はこちら！
+
+      他にも隠しコマンドがあるよ！！！
+# mapの設定
+map:
+  file: map.txt
+
+# todoの設定
+
+todo:
+  file: todo.txt
+  # 例外的に処理する系の部分
+  targetwd: /todo|・とど
+  except:
+    nonecom:
+      content: そんなコマンドねーよ!出直しやがれください
+      img: image/denaosi.gif
+    indexout:
+      content: このリストの数字で指定しやがれください
+      img: image/sitei.gif
+    nonelist:
+      content: そんなリストないわ!出直しやがれください
+      img: image/denaosi.gif
+    syntax:
+      content: 書式しっかりしやがれください
+      img: image/sikkari.gif
+
+  add:
+    targetwd: add|あっd
+    except: ｿﾚﾓｳﾘｽﾄﾆｱﾙﾖ
+    base: 「{}」を追加しました
+
+  done:
+    targetwd: done|どね
+    base: 「{}」を完了しました🎉
+
+  do:
+    targetwd: do|ど
+    base: えー、なんか {0} さんが {1} を実行するらしいです
+    cancel:
+      targetwd: cancel
+      base: "{} の実行をキャンセルしました"
+    mitei: 未定
+
+  response_embed:
+    title: <TODOリスト>
+    color: 0x00ff00
+    field:
+      name: "{0},{1}"
+      value: "by : {0} \n do : {1}"
+
+  help:
+    targetwd: help|へlp
+    embed:
+      title: ＜TODOリスト機能＞
+      color: 0x00ff00
+      description: |-
+        by...リストに追加した人です
+        do...その項目を実行する人です
+
+        /todo : TODOリストを表示
+
+        /todo add ＜やること＞ : リストに＜やること＞を追加
+
+        /todo done ＜やったこと(番号指定)＞ : リストから＜やったこと＞を削除
+
+        /todo do ＜やること(番号指定)＞ : ＜やること＞の do が自分の名前になる
+
+        /todo do ＜やっぱやらないこと(番号指定)＞ cancel : 上のやつをキャンセル
+
+# ペッパーくんの設定
+pepper:
+  disboard:
+    channel: <@&904965422019932190>
+    trigger: Bump done!
+    id: 302050872383242240
+    sleep: 7200
+    embed:
+      color: 0x00ff00
+      title: Bump出来ます！
+      description: \`!d bump` でサーバーの掲載順を上にできます！
+  dissoku:
+    channel: <@&904965422019932190>
+    trigger: をアップしたよ!
+    id: 761562078095867916
+    sleep: 3600
+    embed:
+      color: 0x00ff00
+      title: Dissoku Upできます！
+      description: \`/dissoku up` でサーバーの掲載順を上にできます！
